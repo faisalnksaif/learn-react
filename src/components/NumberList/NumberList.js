@@ -1,51 +1,27 @@
 import React, { Component } from 'react';
 import './NumberList.css'
 import { contacts } from '../../constants/contacts';
+import ViewContact from './ViewContact/ViewContact'
+import ModifyContact from './ModifyContact/ModifyContact'
 
 class NumberList extends Component {
-    inputFocus;
     state = {
         contacts: contacts,
         modifyContact: -1
     }
 
     render() {
-        const viewContact = (contact) => {
-            return (
-                <div>
-                    <div className='col-sm-4'>
-                        {contact.name}
-                    </div>
-                    <div className='col-sm-3'>
-                        {contact.mob}
-                    </div>
-                </div>
-            );
-        }
-
-        const editContact = (contact, index) => {
-            return (
-                <span>
-                    <div className='col-sm-4'>
-                        <input style={{ width: '200px' }}
-                            className='form-control'
-                            ref={(input)=>{this.inputFocus = input}}
-                            onChange={this.handleValueChange.bind(this, index, 'name')}
-                            onBlur={this.modifyContact.bind(this, -1)}
-                            value={contact.name}></input>
-                    </div>
-                    <div className='col-sm-3'>
-                        {contact.mob}
-                    </div>
-                </span>
-            );
-        }
-
         const contactSection = this.state.contacts
             .map((contact, index) => {
                 return (
                     <div key={index} className='contact row'>
-                        {this.state.modifyContact === index ? editContact(contact, index) : viewContact(contact)}
+                        {this.state.modifyContact === index ?
+                            <ModifyContact
+                                contact={contact}
+                                index={index}
+                                changed={this.handleValueChange.bind(this)}
+                                blurred={this.modifyContact.bind(this)} /> :
+                            < ViewContact contact={contact} />}
                         <div onClick={this.modifyContact.bind(this, index)} className='col-sm-5 text-right'>
                             {this.state.modifyContact === -1 ? 'Edit' : ''}
                         </div>
@@ -66,17 +42,13 @@ class NumberList extends Component {
     modifyContact = (index) => {
         this.setState({
             modifyContact: index,
-        }, () => {
-            if (index >= 0) {
-                this.inputFocus.focus();
-            }
         });
     }
 
-    handleValueChange(i, key, e) {
+    handleValueChange(e, i, key) {
         const contacts = [...this.state.contacts];
-        const contactIndex = contacts.findIndex((contact, index) => index === i);
-        contacts[contactIndex][key] = e.target.value;
+        // const contactIndex = contacts.findIndex((contact, index) => index === i);
+        contacts[i][key] = e.target.value;
 
         this.setState({ contacts: [...contacts] });
     }
