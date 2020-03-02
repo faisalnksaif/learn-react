@@ -3,6 +3,7 @@ import './NumberList.css'
 import { contacts } from '../../constants/contacts';
 
 class NumberList extends Component {
+    inputFocus;
     state = {
         contacts: contacts,
         modifyContact: -1
@@ -26,8 +27,9 @@ class NumberList extends Component {
             return (
                 <span>
                     <div className='col-sm-4'>
-                        <input
+                        <input style={{ width: '200px' }}
                             className='form-control'
+                            ref={(input)=>{this.inputFocus = input}}
                             onChange={this.handleValueChange.bind(this, index, 'name')}
                             onBlur={this.modifyContact.bind(this, -1)}
                             value={contact.name}></input>
@@ -36,7 +38,6 @@ class NumberList extends Component {
                         {contact.mob}
                     </div>
                 </span>
-
             );
         }
 
@@ -46,7 +47,7 @@ class NumberList extends Component {
                     <div key={index} className='contact row'>
                         {this.state.modifyContact === index ? editContact(contact, index) : viewContact(contact)}
                         <div onClick={this.modifyContact.bind(this, index)} className='col-sm-5 text-right'>
-                            {this.state.modifyContact === -1 ? 'Edit':''}
+                            {this.state.modifyContact === -1 ? 'Edit' : ''}
                         </div>
                     </div>
                 )
@@ -66,7 +67,9 @@ class NumberList extends Component {
         this.setState({
             modifyContact: index,
         }, () => {
-            console.log(this.state)
+            if (index >= 0) {
+                this.inputFocus.focus();
+            }
         });
     }
 
