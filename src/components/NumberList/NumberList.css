@@ -1,0 +1,16 @@
+.NumberList {
+    margin:10px 0 0 0;
+    background:#e7e7e7;
+}
+
+.NumberList .contact{
+    text-align: left;
+    margin:0 20px 0 20px;  
+    cursor: pointer;
+    padding:10px;
+}
+
+.NumberList .contact:hover{
+    background:#c5bcbc;
+    transition: .3s all;
+}
